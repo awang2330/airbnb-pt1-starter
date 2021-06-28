@@ -2,6 +2,51 @@ const db = require("../db")
 const { BadRequestError, NotFoundError } = require("../utils/errors")
 
 class Booking {
+  static async createBooking(newBooking, listing, user) {
+    if (!newBooking.startDate || !newBooking.endDate) {
+      throw new BadRequestError(`Missing startDate or endDate`)
+    }
+
+    const userId = await db.query(`
+      SELECT id 
+      FROM users
+      WHERE username = $1
+      `, [user.username]
+      )
+    const results = await db.query(`
+      INSERT INTO bookings (user_id, listing_id, payment_method, start_date, end_date, guests, total_cost)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING id, user_id as "userId", listing_id as "listingId",
+      (
+        SELECT username
+        FROM users
+        WHERE id = user_id
+      ) AS "username",
+      (
+        SELECT users.username
+        FROM users
+        WHERE users.id = 
+        (
+          SELECT listings.user_id
+          FROM listings
+          WHERE listings.id = listing_id
+        )
+      ) AS "hostUsername",
+      start_date as "startDate", end_date as "endDate", guests, total_cost as "totalCost", created_at as "createdAt", payment_method as "paymentMethod"
+      `, 
+      [userId.rows[0].id,
+       listing.id,
+       newBooking.paymentMethod || "card", 
+       new Date(newBooking.startDate), 
+       new Date(newBooking.endDate), 
+       newBooking.guests || 1, 
+       Math.ceil((listing.price * 1.1) * (new Date(newBooking.endDate) - new Date(newBooking.startDate) + 1))
+      ]
+    )
+
+    return results.rows[0]
+  }
+
   static async fetchBookingById(bookingId) {
     // fetch a single booking by its id
     const results = await db.query(

@@ -40,11 +40,13 @@ describe("POST /listings/", () => {
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur finibus, ligula eu eleifend consequat, sem metus dignissim purus, et sodales eros ligula non lacus. Maecenas lacinia nibh at semper efficitur. Fusce tincidunt, mi non tincidunt faucibus, neque velit hendrerit tortor, non fermentum nisi tortor at dui.",
       imageUrl:
         "https://images.unsplash.com/photo-1539437829697-1b4ed5aebd19?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1534&q=80",
+      imageUrl2:"https://image.unsplash.com/photo-1539437829697-1b4ed5aebd19?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1534&q=80",
+      imageUrl3:"https://images.unsplash.com/photo-1539437829697-1b4ed5aebd19?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1534&q=80",
       price: 20000,
     }
 
     const res = await request(app)
-      .post(`/listings`)
+      .post(`/listings/listings`)
       .set("authorization", `Bearer ${testTokens.lebronToken}`)
       .send({ newListing })
     expect(res.statusCode).toEqual(201)
@@ -63,8 +65,8 @@ describe("POST /listings/", () => {
       location: newListing.location,
       description: newListing.description,
       imageUrl: newListing.imageUrl,
-      imageUrl2: null,
-      imageUrl3: null,
+      imageUrl2: newListing.imageUrl2,
+      imageUrl3: newListing.imageUrl3,
       price: newListing.price,
       totalAmount: Math.ceil(newListing.price + newListing.price * 0.1),
       createdAt: expect.any(String),
@@ -73,7 +75,7 @@ describe("POST /listings/", () => {
   })
 
   test("Throws Unauthorized error when user is unauthenticated", async () => {
-    const res = await request(app).post(`/listings/`)
+    const res = await request(app).post(`/listings/listings`)
     expect(res.statusCode).toEqual(401)
   })
 })

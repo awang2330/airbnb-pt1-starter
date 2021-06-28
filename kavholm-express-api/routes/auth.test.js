@@ -78,11 +78,11 @@ describe("Auth Routes", () => {
         user: {
           id: expect.any(Number),
           username: "new",
-          firstName: "first",
-          lastName: "last",
+          first_name: "first",
+          last_name: "last",
           email: "new@email.com",
-          createdAt: expect.any(String),
-          isAdmin: false,
+          created_at: expect.any(String),
+          is_admin: false,
         },
       })
     })

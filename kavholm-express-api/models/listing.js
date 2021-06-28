@@ -1,9 +1,13 @@
 const db = require("../db")
-const { BadRequestError, NotFoundError } = require("../utils/errors")
+const { BadRequestError, NotFoundError, UnauthorizedError } = require("../utils/errors")
 
 class Listing {
   static async createListing({ newListing, user }) {
-    const requiredFields = ["location", "title", "description", "imageUrl"]
+    if (!user) {
+      throw new UnauthorizedError(``)
+    }
+
+    const requiredFields = ["location", "title", "description", "imageUrl", "imageUrl2", "imageUrl3", "price"]
     requiredFields.forEach((field) => {
       if (!newListing?.hasOwnProperty(field)) {
         throw new BadRequestError(`Missing required field - ${field} - in request body.`)

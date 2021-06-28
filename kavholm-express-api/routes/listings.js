@@ -3,11 +3,11 @@ const Listing = require("../models/listing")
 const security = require("../middleware/security")
 const router = express.Router()
 
-router.post("/", security.requireAuthenticatedUser, async function (req, res, next) {
+router.post("/listings", security.requireAuthenticatedUser, async function (req, res, next) {
   try {
     const user = res.locals.user
     const listing = await Listing.createListing({ newListing: req.body.newListing, user })
-    return res.status(200).json({ listing })
+    return res.status(201).json({ listing })
   } catch (err) {
     next(err)
   }

@@ -62,11 +62,11 @@ describe("User", () => {
       expect(user).toEqual({
         id: expect.any(Number),
         username: newUser.username,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
+        first_name: newUser.firstName,
+        last_name: newUser.lastName,
         email: newUser.email,
-        isAdmin: newUser.isAdmin,
-        createdAt: expect.any(Date),
+        is_admin: newUser.isAdmin,
+        created_at: expect.any(Date),
       })
     })
 
